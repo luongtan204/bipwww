@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- Fragment header - PHẢI CÓ th:fragment="header" -->
+<nav th:fragment="header" class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/products}">
+            <i class="fas fa-shopping-cart"></i> Shopping System
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/products}" th:classappend="${#request.requestURI.contains('/products') ? 'active' : ''}">
+                        <i class="fas fa-box"></i> Sản phẩm
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('CUSTOMER', 'ADMIN')">
+                    <a class="nav-link" th:href="@{/orders/cart}" th:classappend="${#request.requestURI.contains('/cart') ? 'active' : ''}">
+                        <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                        <span class="badge bg-danger" th:if="${session.cart != null and !session.cart.isEmpty()}"
+                              th:text="${session.cart.totalItems}"></span>
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/orders}" th:classappend="${#request.requestURI.contains('/orders') ? 'active' : ''}">
+                        <i class="fas fa-file-invoice"></i> Hóa đơn
+                    </a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link" th:href="@{/customers}" th:classappend="${#request.requestURI.contains('/customers') ? 'active' : ''}">
+                        <i class="fas fa-users"></i> Khách hàng
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-user-circle"></i>
+                        <span sec:authentication="name">Username</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <span class="dropdown-item-text">
+                                <strong>Role:</strong> <span sec:authentication="principal.authorities"></span>
+                            </span>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form th:action="@{/logout}" method="post" class="d-inline">
+                                <button type="submit" class="dropdown-item">
+                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+</body>
+</html>

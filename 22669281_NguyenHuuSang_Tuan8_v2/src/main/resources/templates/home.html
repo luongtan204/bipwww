@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<p>
+<!--    <img src="../../../images/shopping.png" th:src="@{/images/shopping.png}" />-->
+<h1 th:text="${message}">mess</h1>
+<p th:text="${date}"></p>
+</p>
+
+<p>Please select an option</p>
+<ol>
+    <li><a th:href="@{/products}">Product List</a></li>
+    <li><a th:href="@{/orders}">Order List</a></li>
+    <li><a th:href="@{/customers}">Customer List</a></li>
+</ol>
+</body>
+</html>

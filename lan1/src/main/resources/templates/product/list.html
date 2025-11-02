@@ -1,0 +1,32 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>List</h1>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/product/add}" >+ Add New Product</a>
+    </div>
+
+    <div th:each="product: ${products}" class="product">
+        <a href="product/productdetail.html" th:href="@{'/product/' + ${product.id}}">
+            <input type="hidden" th:value="${product.id}" th:name="productId">
+            <h2 th:text="${product.name}">Product Name</h2>
+        </a>
+<!--        <img th:src="${product.image}" alt="Product Image">-->
+        <div th:if="${product.image != null and !product.image.isEmpty()}">
+            <img th:src="${product.image}" th:alt="${product.name}"
+                 style="max-width: 300px; height: 200px; object-fit: cover;">
+        </div>
+        <p><strong>Price:</strong> <span th:text="${product.price}">0</span> USD</p>
+        <a th:href="@{'/product/edit/'+${product.id} }" >+ edit</a>
+        <a th:href="@{'/product/delete/'+${product.id} }" >-Delete</a>
+    </div>
+
+</body>
+</html>

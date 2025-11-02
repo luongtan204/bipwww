@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết sản phẩm</title>
+    <meta charset="UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container py-5">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h2 class="mb-0">Chi tiết sản phẩm</h2>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">ID:</dt>
+                <dd class="col-sm-8" th:text="${product.id}"></dd>
+                <dt class="col-sm-4">Tên sản phẩm:</dt>
+                <dd class="col-sm-8" th:text="${product.name}"></dd>
+                <dt class="col-sm-4">Giá:</dt>
+                <dd class="col-sm-8" th:text="${product.price}"></dd>
+                <dt class="col-sm-4">Tồn kho:</dt>
+                <dd class="col-sm-8" th:text="${product.inStock ? 'Còn' : 'Hết'}"></dd>
+                <dt class="col-sm-4">Hình ảnh:</dt>
+                <dd class="col-sm-8">
+                    <!-- Sử dụng đường dẫn trực tiếp từ MvcConfig -->
+                    <img th:src="${product.image != null ? '/uploads/' + product.image : '/uploads/default-image.png'}"
+                         alt="Product Image" class="img-fluid" style="max-width: 200px;"/>
+                </dd>
+            </dl>
+
+            <hr>
+            <h5>Bình luận sản phẩm:</h5>
+            <ul>
+                <li th:each="c : ${product.comments}" th:text="${c.text}"></li>
+            </ul>
+            <a th:href="@{/products/{id}/comments/add(id=${product.id})}" class="btn btn-primary btn-sm">Thêm bình luận</a>
+            <a th:href="@{/products}" class="btn btn-secondary">Quay lại danh sách</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

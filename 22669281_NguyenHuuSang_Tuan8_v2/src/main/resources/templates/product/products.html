@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Danh sách sản phẩm</title>
+    <meta charset="UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .product-card {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .product-image {
+            height: 200px;
+            object-fit: cover;
+            background: #f8f9fa;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .price {
+            font-size: 1.5rem;
+            color: #28a745;
+            font-weight: bold;
+        }
+        .admin-actions {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+<!--<div th:replace="fragments/header :: header"></div>-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-shopping-store"></i> Cửa hàng
+        </a>
+        <div class="d-flex align-items-center">
+            <!-- Hiển thị username -->
+            <span class="me-3" sec:authentication="name">Username</span>
+
+            <!-- Icon giỏ hàng - chỉ cho CUSTOMER và ADMIN -->
+            <a th:href="@{/orders/cart}" class="btn btn-outline-primary position-relative me-3"
+               sec:authorize="hasAnyRole('CUSTOMER', 'ADMIN')">
+                <i class="fas fa-shopping-cart fa-lg"></i>
+                <span class="cart-badge" th:if="${session.cart != null and !session.cart.isEmpty()}"
+                      th:text="${session.cart.totalItems}">0</span>
+            </a>
+
+            <!-- Nút thêm sản phẩm - chỉ cho ADMIN -->
+            <a class="btn btn-success me-2" th:href="@{/products/add}" sec:authorize="hasRole('ADMIN')">
+                <i class="fas fa-plus"></i> Thêm sản phẩm
+            </a>
+
+            <!-- Logout button -->
+            <form th:action="@{/logout}" method="post" class="d-inline">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                </button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h2 class="mb-4">Danh sách sản phẩm</h2>
+
+    <!-- Form tìm kiếm -->
+    <form th:action="@{/products/search}" method="get" class="mb-4">
+        <div class="input-group" style="max-width: 500px;">
+            <input type="text" name="name" th:value="${keyword}" placeholder="Tìm kiếm sản phẩm..." class="form-control"/>
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search"></i> Tìm kiếm
+            </button>
+        </div>
+    </form>
+
+    <!-- Danh sách sản phẩm dạng card -->
+    <div class="row g-4">
+        <div class="col-md-4" th:each="product : ${products}">
+            <div class="card product-card">
+                <!-- Hình ảnh sản phẩm -->
+                <img th:src="${product.image != null ? '/uploads/' + product.image : 'https://via.placeholder.com/400x300?text=No+Image'}"
+                     class="card-img-top product-image"
+                     th:alt="${product.name}">
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${product.name}">Tên sản phẩm</h5>
+                    <p class="price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 2, 'POINT')} + ' VNĐ'">0 VNĐ</p>
+
+                    <div class="mb-2">
+                        <span class="badge" th:classappend="${product.inStock ? 'bg-success' : 'bg-danger'}">
+                            <i class="fas" th:classappend="${product.inStock ? 'fa-check-circle' : 'fa-times-circle'}"></i>
+                            <span th:text="${product.inStock ? 'Còn hàng' : 'Hết hàng'}">Còn hàng</span>
+                        </span>
+                    </div>
+
+                    <!-- Nút hành động cho khách hàng -->
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/products/detail/{id}(id=${product.id})}" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-eye"></i> Xem chi tiết
+                        </a>
+
+                        <!-- Form thêm vào giỏ hàng - chỉ cho CUSTOMER và ADMIN -->
+                        <div sec:authorize="hasAnyRole('CUSTOMER', 'ADMIN')">
+                            <form th:action="@{/orders/cart/add}" method="post" th:if="${product.inStock}">
+                                <input type="hidden" name="productId" th:value="${product.id}"/>
+                                <div class="input-group input-group-sm mb-2">
+                                    <span class="input-group-text">Số lượng:</span>
+                                    <input type="number" name="quantity" value="1" min="1" max="99" class="form-control" style="max-width: 80px;"/>
+                                </div>
+                                <button type="submit" class="btn btn-success btn-sm w-100">
+                                    <i class="fas fa-cart-plus"></i> Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+
+                        <button class="btn btn-secondary btn-sm w-100" disabled th:unless="${product.inStock}">
+                            <i class="fas fa-ban"></i> Hết hàng
+                        </button>
+                    </div>
+
+                    <!-- Nút hành động cho ADMIN - CHỈ HIỂN THỊ KHI ROLE LÀ ADMIN -->
+                    <div sec:authorize="hasRole('ADMIN')" class="admin-actions">
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/products/edit/{id}(id=${product.id})}" class="btn btn-warning btn-sm flex-fill">
+                                <i class="fas fa-edit"></i> Sửa
+                            </a>
+                            <a th:href="@{/products/delete/{id}(id=${product.id})}"
+                               class="btn btn-danger btn-sm flex-fill"
+                               th:onclick="'return confirm(\'Bạn có chắc muốn xóa sản phẩm này?\')'">
+                                <i class="fas fa-trash"></i> Xóa
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thông báo khi không có sản phẩm -->
+    <div th:if="${products == null or products.isEmpty()}" class="alert alert-info text-center mt-4">
+        <i class="fas fa-info-circle"></i> Không tìm thấy sản phẩm nào.
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

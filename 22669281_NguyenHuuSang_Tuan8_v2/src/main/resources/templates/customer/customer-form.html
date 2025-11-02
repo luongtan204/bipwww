@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Thêm/Sửa khách hàng</title>
+    <meta charset="UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container py-5">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0" th:text="${customer.id == null} ? 'Thêm khách hàng' : 'Sửa khách hàng'"></h2>
+        </div>
+        <div class="card-body">
+            <form th:action="${customer.id == null} ? @{/customers/add} : @{/customers/edit/{id}(id=${customer.id})}"
+                  th:object="${customer}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Tên khách hàng:</label>
+                    <input type="text" class="form-control" th:field="*{name}" required/>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Ngày đăng ký:</label>
+                    <input type="date" class="form-control" th:field="*{customerSince}" required/>
+                </div>
+                <button type="submit" class="btn btn-success">Lưu</button>
+                <a th:href="@{/customers}" class="btn btn-secondary ms-2">Quay lại danh sách</a>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
