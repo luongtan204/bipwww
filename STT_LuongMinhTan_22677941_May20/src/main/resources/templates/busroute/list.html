@@ -1,7 +1,13 @@
 
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-...
+
 <h2>Danh sách tuyến xe bus</h2>
+<!-- Form tìm kiếm theo tên -->
+<form th:action="@{/busroute}" method="get" style="margin-bottom:10px;">
+    <input type="text" name="q" th:value="${q}" placeholder="Tìm theo tên tuyến..." />
+    <button type="submit">Tìm</button>
+    <a th:if="${q != null and q != ''}" th:href="@{/busroute}">Xóa bộ lọc</a>
+</form>
 <!-- Nút Đăng xuất (chỉ hiển thị khi đã đăng nhập) -->
 <div sec:authorize="isAuthenticated()" style="float:right">
     <form th:action="@{/logout}" method="post" style="display:inline">

@@ -14,6 +14,14 @@ public class BusRouteServiceImpl implements BusRouteService {
 
     public List<BusRoute> findAll() { return repo.findAll(); }
     public BusRoute findById(int id) { return repo.findById(id).orElse(null); }
-    public BusRoute save(BusRoute route) { return repo.save(route); }        // ⬅️
+    public BusRoute save(BusRoute route) { return repo.save(route); }
     public void deleteById(int id) { repo.deleteById(id); }
+
+    // Tìm theo tên (nếu name null hoặc rỗng trả về tất cả)
+    public List<BusRoute> findByNameContaining(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return repo.findAll();
+        }
+        return repo.findByNameContainingIgnoreCase(name.trim());
+    }
 }

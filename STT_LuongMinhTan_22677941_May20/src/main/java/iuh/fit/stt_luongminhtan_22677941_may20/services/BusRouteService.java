@@ -9,4 +9,6 @@ public interface BusRouteService {
     BusRoute findById(int id);
     BusRoute save(BusRoute route);       // ⬅️ thêm
     void deleteById(int id);             // ⬅️ thêm
+    // Thêm phương thức tìm kiếm theo tên
+    List<BusRoute> findByNameContaining(String name);
 }
