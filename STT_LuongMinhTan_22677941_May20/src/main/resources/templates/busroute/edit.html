@@ -1,0 +1,19 @@
+<h2>Sửa tuyến bus</h2>
+<form th:action="@{/busroute/{id}/edit(id=${route.id})}" th:object="${route}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <p><b>ID:</b> <span th:text="${route.id}"></span></p>
+    <label>Tên tuyến</label>
+    <input th:field="*{name}" required/><br/>
+    <label>Điểm đầu</label>
+    <input th:field="*{start}" required/><br/>
+    <label>Điểm cuối</label>
+    <input th:field="*{end}" required/><br/>
+    <label>Giá vé</label>
+    <input th:field="*{price}" type="number" min="0" required/><br/>
+    <label>Ưu tiên</label>
+    <input th:field="*{priority}" type="number" min="0"/><br/>
+    <label>Số trạm</label>
+    <input th:field="*{stationNo}" type="number" min="0"/><br/>
+    <button type="submit">Cập nhật</button>
+    <a th:href="@{/busroute/{id}(id=${route.id})}">Hủy</a>
+</form>
