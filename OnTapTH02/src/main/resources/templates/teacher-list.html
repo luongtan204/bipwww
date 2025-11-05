@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher list</title>
+</head>
+<body>
+<h1>Danh sách giáo viên</h1>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên giáo viên</th>
+        <th>Địa chỉ</th>
+        <th>Chức vụ</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="t : ${teachers}">
+        <td th:text="${t.id}"></td>
+        <td th:text="${t.name}"></td>
+        <td th:text="${t.chucvu}"></td>
+        <td th:text="${t.chucvu}"></td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(teachers)}">
+        <td colspan="2">Không có giáo viên nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+<p>
+    <a th:href="@{/clazzes}">&laquo; Quay lại danh sách lớp</a>
+</p>
+
+</body>
+</html>

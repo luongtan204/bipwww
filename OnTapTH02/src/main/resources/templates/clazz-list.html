@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+    <meta charset="UTF-8">
+    <title>Class list</title>
+</head>
+<body>
+<h1>Danh sách lớp học</h1>
+
+<form th:action="@{/clazzes/filter-by-month}" method="get">
+    Từ tháng:
+    <input type="number" name="fromMonth" min="1" max="12" required>
+    Đến tháng:
+    <input type="number" name="toMonth" min="1" max="12" required>
+    <button type="submit">Lọc</button>
+</form>
+
+<form th:action="@{/clazzes/filter-by-name}" method="get">
+    <input type="text" name="keyword" placeholder="Nhập tên lớp hoặc tên giảng viên">
+    <button type="submit">Tìm</button>
+</form>
+
+<div sec:authorize="hasAnyAuthority('ADMIN')">
+    <p>
+        <a th:href="@{/clazzes/add}">+ Thêm lớp mới</a>
+    </p>
+</div>
+
+<hr/>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Tên lớp</th>
+        <th>Ngày bắt đầu</th>
+        <th>Số lượng</th>
+        <th>Giảng viên</th>
+        <th>Chi tiết</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="clazz : ${clazzes}">
+        <td th:text="${clazz.id}"></td>
+        <td th:text="${clazz.name}"></td>
+        <td th:text="${#temporals.format(clazz.startdate, 'dd/MM/yyyy')}"></td>
+        <td th:text="${clazz.quantity}"></td>
+        <td th:text="${clazz.teacher != null ? clazz.teacher.name : 'N/A'}"></td>
+        <td>
+            <a th:href="@{'/clazzes/' + ${clazz.id}}">Xem</a>
+        </td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(clazzes)}">
+        <td colspan="6">Không có lớp nào.</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
