@@ -6,20 +6,17 @@
     <title>Thêm Đề tài</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
-        .header { background-color: #333; color: white; padding: 15px; margin: -20px -20px 20px -20px; }
+        .header { border: 1px solid #000; padding: 10px; margin-bottom: 20px; }
         .user-info { float: right; }
-        .info-box { background-color: #e7f3fe; border-left: 4px solid #2196F3; padding: 10px; margin-bottom: 20px; }
+        .info-box { border: 1px solid #000; padding: 10px; margin-bottom: 20px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        input.error { border-color: #dc3545; }
-        .error-msg { color: #dc3545; font-size: 0.9em; margin-top: 3px; }
-        .help-text { color: #666; font-size: 0.85em; margin-top: 3px; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #000; box-sizing: border-box; }
+        .error-msg { color: red; font-size: 0.9em; margin-top: 3px; }
+        .help-text { font-size: 0.85em; margin-top: 3px; }
         .required { color: red; }
-        button { padding: 10px 20px; cursor: pointer; border: none; margin-right: 10px; }
-        .btn-save { background-color: #4CAF50; color: white; }
-        .btn-cancel { background-color: #666; color: white; text-decoration: none; display: inline-block; padding: 10px 20px; }
-        button:hover, .btn-cancel:hover { opacity: 0.8; }
+        button, .btn-cancel { padding: 10px 20px; margin-right: 10px; }
+        .btn-cancel { text-decoration: none; display: inline-block; }
     </style>
 </head>
 <body>
@@ -44,17 +41,8 @@
         <input type="hidden" name="magv" th:value="${giangvien.magv}">
 
         <div class="form-group">
-            <label>Mã Đề tài: <span class="required">*</span></label>
-            <input type="text" th:field="*{madetai}"
-                   th:classappend="${#fields.hasErrors('madetai')} ? 'error' : ''"
-                   placeholder="Ví dụ: DT001">
-            <div class="error-msg" th:if="${#fields.hasErrors('madetai')}" th:errors="*{madetai}"></div>
-        </div>
-
-        <div class="form-group">
             <label>Tên Đề tài: <span class="required">*</span></label>
             <input type="text" th:field="*{tendetai}"
-                   th:classappend="${#fields.hasErrors('tendetai')} ? 'error' : ''"
                    placeholder="Độ dài 10-100 ký tự">
             <div class="error-msg" th:if="${#fields.hasErrors('tendetai')}" th:errors="*{tendetai}"></div>
             <div class="help-text">Tên đề tài phải có độ dài từ 10 đến 100 ký tự</div>
@@ -63,7 +51,6 @@
         <div class="form-group">
             <label>Năm: <span class="required">*</span></label>
             <input type="number" th:field="*{nam}"
-                   th:classappend="${#fields.hasErrors('nam')} ? 'error' : ''"
                    min="2022" max="2025" placeholder="2022-2025">
             <div class="error-msg" th:if="${#fields.hasErrors('nam')}" th:errors="*{nam}"></div>
             <div class="help-text">Năm phải trong khoảng 2022-2025</div>
@@ -72,7 +59,6 @@
         <div class="form-group">
             <label>Mô tả Đề tài: <span class="required">*</span></label>
             <textarea th:field="*{mota}" rows="4"
-                      th:classappend="${#fields.hasErrors('mota')} ? 'error' : ''"
                       placeholder="Độ dài 10-200 ký tự"></textarea>
             <div class="error-msg" th:if="${#fields.hasErrors('mota')}" th:errors="*{mota}"></div>
             <div class="help-text">Mô tả phải có độ dài từ 10 đến 200 ký tự</div>
@@ -81,14 +67,13 @@
         <div class="form-group">
             <label>Mã Đăng ký: <span class="required">*</span></label>
             <input type="text" th:field="*{madangky}"
-                   th:classappend="${#fields.hasErrors('madangky')} ? 'error' : ''"
                    placeholder="Ví dụ: AB-123">
             <div class="error-msg" th:if="${#fields.hasErrors('madangky')}" th:errors="*{madangky}"></div>
             <div class="help-text">Định dạng: XX-YYY (XX: 2 ký tự in hoa, YYY: 3 chữ số)</div>
         </div>
 
         <div class="form-group">
-            <button type="submit" class="btn-save">Lưu Đề tài</button>
+            <button type="submit">Lưu Đề tài</button>
             <a th:href="@{/giangvien/{magv}(magv=${giangvien.magv})}" class="btn-cancel">Hủy</a>
         </div>
     </form>
