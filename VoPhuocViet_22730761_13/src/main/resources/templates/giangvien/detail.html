@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết Giảng viên</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        .header { background-color: #333; color: white; padding: 15px; margin: -20px -20px 20px -20px; }
+        .user-info { float: right; }
+        .info-box { border: 1px solid #ddd; padding: 15px; margin-bottom: 20px; background-color: #f9f9f9; }
+        button { padding: 5px 10px; cursor: pointer; background-color: #4CAF50; color: white; border: none; }
+        a { text-decoration: none; color: #4CAF50; padding: 5px 10px; border: 1px solid #4CAF50; }
+        a:hover { background-color: #4CAF50; color: white; }
+        .btn-back { color: #666; border-color: #666; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2 style="display: inline;">Quản lý Đề tài Giảng viên</h2>
+        <div class="user-info">
+            <span>Xin chào: <strong sec:authentication="name">User</strong></span>
+            (<span sec:authentication="principal.authorities"></span>)
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit">Đăng xuất</button>
+            </form>
+        </div>
+    </div>
+
+    <h2>Thông tin Giảng viên</h2>
+
+    <div class="info-box">
+        <p><strong>Mã GV:</strong> <span th:text="${giangvien.magv}"></span></p>
+        <p><strong>Tên GV:</strong> <span th:text="${giangvien.tengv}"></span></p>
+        <p><strong>Lĩnh vực nghiên cứu:</strong> <span th:text="${giangvien.linhvucnghiencuu}"></span></p>
+        <p><strong>Email:</strong> <span th:text="${giangvien.email}"></span></p>
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <h3 style="display: inline;">Danh sách Đề tài</h3>
+        <a sec:authorize="hasRole('CHAIRMAN')"
+           th:href="@{/detai/add/{magv}(magv=${giangvien.magv})}"
+           style="float: right;">
+            Thêm Đề tài mới
+        </a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mã Đề tài</th>
+                <th>Tên Đề tài</th>
+                <th>Năm</th>
+                <th>Mô tả</th>
+                <th>Mã Đăng ký</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${detais == null or detais.isEmpty()}">
+                <td colspan="5" style="text-align: center;">Chưa có đề tài nào</td>
+            </tr>
+            <tr th:each="dt : ${detais}">
+                <td th:text="${dt.madetai}"></td>
+                <td th:text="${dt.tendetai}"></td>
+                <td th:text="${dt.nam}"></td>
+                <td th:text="${dt.mota}"></td>
+                <td th:text="${dt.madangky}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px;">
+        <a href="/" class="btn-back">Quay lại danh sách</a>
+    </div>
+</body>
+</html>
